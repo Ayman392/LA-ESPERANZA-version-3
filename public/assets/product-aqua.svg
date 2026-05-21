@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1100" viewBox="0 0 900 1100" fill="none">
+  <rect width="900" height="1100" rx="72" fill="#FAFAF8"/>
+  <circle cx="450" cy="517" r="318" fill="url(#a)"/>
+  <rect x="351" y="211" width="198" height="96" rx="8" fill="url(#b)"/>
+  <rect x="392" y="128" width="116" height="105" rx="18" fill="#101010"/>
+  <path d="M302 326c0-58 47-105 105-105h86c58 0 105 47 105 105v428c0 82-66 148-148 148s-148-66-148-148V326z" fill="url(#c)"/>
+  <rect x="353" y="482" width="194" height="196" rx="24" fill="#F7F8F4" opacity=".9"/>
+  <rect x="387" y="526" width="126" height="15" rx="7.5" fill="#C9A96A"/>
+  <rect x="407" y="568" width="86" height="10" rx="5" fill="#111" opacity=".36"/>
+  <path d="M344 321c38-54 94-75 158-55" stroke="#fff" stroke-opacity=".55" stroke-width="16" stroke-linecap="round"/>
+  <path d="M535 326c26 28 36 66 34 112" stroke="#fff" stroke-opacity=".2" stroke-width="12" stroke-linecap="round"/>
+  <ellipse cx="450" cy="932" rx="226" ry="42" fill="#111" opacity=".1"/>
+  <defs>
+    <radialGradient id="a" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(450 517) rotate(90) scale(318)">
+      <stop stop-color="#95B4B6" stop-opacity=".32"/>
+      <stop offset=".66" stop-color="#C9A96A" stop-opacity=".09"/>
+      <stop offset="1" stop-color="#95B4B6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="b" x1="351" x2="549" y1="211" y2="307" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#111"/>
+      <stop offset=".48" stop-color="#C9A96A"/>
+      <stop offset="1" stop-color="#111"/>
+    </linearGradient>
+    <linearGradient id="c" x1="302" x2="598" y1="221" y2="902" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff"/>
+      <stop offset=".28" stop-color="#DDE7E5"/>
+      <stop offset=".56" stop-color="#95B4B6"/>
+      <stop offset=".8" stop-color="#3D5557"/>
+      <stop offset="1" stop-color="#0F0F0F"/>
+    </linearGradient>
+  </defs>
+</svg>

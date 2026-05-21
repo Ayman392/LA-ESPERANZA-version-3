@@ -1,0 +1,149 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color: #111111;
+  background: #f8f7f4;
+  font-family: "Rubik", sans-serif;
+  font-synthesis: none;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at top left, rgba(201, 169, 106, 0.16), transparent 34rem),
+    linear-gradient(180deg, #fafaf8 0%, #f8f7f4 100%);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.luxury-container {
+  width: min(1180px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.glass-panel {
+  border: 1px solid rgba(232, 227, 216, 0.34);
+  background: rgba(15, 15, 15, 0.32);
+  backdrop-filter: blur(22px);
+}
+
+.premium-button {
+  min-height: 3.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  border-radius: 999px;
+  padding: 0.95rem 1.35rem;
+  font-weight: 600;
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease,
+    background 220ms ease;
+}
+
+.premium-button:hover {
+  transform: translateY(-2px);
+}
+
+.icon-button {
+  display: inline-flex;
+  height: clamp(2.5rem, 5vw, 2.9rem);
+  width: clamp(2.5rem, 5vw, 2.9rem);
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  transition:
+    transform 220ms ease,
+    background 220ms ease,
+    border-color 220ms ease;
+}
+
+.icon-button:hover {
+  transform: translateY(-2px);
+}
+
+.hero-bg {
+  background-image:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.86) 0%, rgba(0, 0, 0, 0.68) 41%, rgba(0, 0, 0, 0.18) 78%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.38), rgba(0, 0, 0, 0.72)),
+    url("/assets/la-esperanza-hero.png");
+  background-size: cover;
+  background-position: center right;
+}
+
+.product-card {
+  position: relative;
+  isolation: isolate;
+}
+
+.product-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  opacity: 0;
+  box-shadow: 0 28px 80px rgba(17, 17, 17, 0.16);
+  transition: opacity 260ms ease;
+}
+
+.product-card:hover::before {
+  opacity: 1;
+}
+
+.section-pad {
+  padding-block: clamp(4.5rem, 8vw, 7.5rem);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@media (max-width: 767px) {
+  .hero-bg {
+    background-image:
+      linear-gradient(90deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.76) 54%, rgba(0, 0, 0, 0.36) 100%),
+      linear-gradient(180deg, rgba(0, 0, 0, 0.48), rgba(0, 0, 0, 0.78)),
+      url("/assets/la-esperanza-hero.png");
+    background-position: 62% center;
+  }
+}
