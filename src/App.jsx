@@ -33,6 +33,14 @@ import { useEffect, useMemo, useState } from "react";
 const disclaimer =
   "LA ESPERANZA fragrances are inspired by popular scent profiles. We are not affiliated with, endorsed by, or connected to the original designer brands.";
 
+// Put your real business WhatsApp number here in international format.
+// Example: if your number is 01712345678, write 8801712345678.
+const BUSINESS_WHATSAPP_NUMBER = "8801760977865";
+
+const createWhatsAppLink = (message = "Hello LA ESPERANZA, I want to know more about your perfumes.") => {
+  return `https://wa.me/${BUSINESS_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+};
+
 const products = [
   {
     id: "noir-oud",
@@ -130,6 +138,7 @@ function App() {
   const [quickView, setQuickView] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
   const [wishlistItems, setWishlistItems] = useState(() => {
     try {
       const savedWishlist = localStorage.getItem("wishlistItems");
@@ -139,6 +148,7 @@ function App() {
       return [];
     }
   });
+
   const [cartItems, setCartItems] = useState(() => {
     try {
       const savedCart = localStorage.getItem("cartItems");
@@ -344,7 +354,6 @@ function App() {
     </div>
   );
 }
-
 function Nav({ activeView, cartCount, wishlistCount, onNavigate, onSearchOpen }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const isHeroTheme = activeView === "home";
@@ -480,14 +489,19 @@ function Nav({ activeView, cartCount, wishlistCount, onNavigate, onSearchOpen })
     </header>
   );
 }
-
 function IconButton({ children, label, tone = "dark", className = "", onClick }) {
   const toneClass =
     tone === "light"
       ? "border border-line bg-white text-ink hover:bg-black/5"
       : "border border-white/15 bg-white/8 text-white hover:bg-white/14";
   return (
-    <button type="button" onClick={onClick} aria-label={label} title={label} className={`icon-button ${toneClass} ${className}`}>
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      title={label}
+      className={`icon-button ${toneClass} ${className}`}
+    >
       {children}
     </button>
   );
@@ -507,14 +521,7 @@ function Home({ onNavigate, onOpenProduct, onQuickView, onAddCart, onBuyNow, onT
     <main>
       <Hero onNavigate={onNavigate} />
       <FeaturedCategories onNavigate={onNavigate} />
-      <BestSellers
-        onOpenProduct={onOpenProduct}
-        onQuickView={onQuickView}
-        onAddCart={onAddCart}
-        onBuyNow={onBuyNow}
-        onToggleWishlist={onToggleWishlist}
-        isWishlisted={isWishlisted}
-      />
+      <BestSellers onOpenProduct={onOpenProduct} onQuickView={onQuickView} onAddCart={onAddCart} onBuyNow={onBuyNow} onToggleWishlist={onToggleWishlist} isWishlisted={isWishlisted} />
       <WhyChoose />
       <TrustSection />
       <EditorialShowcase onNavigate={onNavigate} onOpenProduct={onOpenProduct} />
@@ -545,18 +552,30 @@ function Hero({ onNavigate }) {
             Premium inspired fragrances crafted for confidence, elegance, and everyday luxury.
           </p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <button type="button" onClick={() => onNavigate("shop")} className="premium-button bg-white text-black shadow-glass hover:bg-champagne">
+            <button
+              type="button"
+              onClick={() => onNavigate("shop")}
+              className="premium-button bg-white text-black shadow-glass hover:bg-champagne"
+            >
               Shop Collection
               <ArrowRight size={18} />
             </button>
-            <a href="https://wa.me/" className="premium-button border border-white/22 bg-white/8 text-white hover:border-champagne/70 hover:bg-white/14">
+            <a
+              href={createWhatsAppLink()}
+              target="_blank"
+              rel="noreferrer"
+              className="premium-button border border-white/22 bg-white/8 text-white hover:border-champagne/70 hover:bg-white/14"
+            >
               <MessageCircle size={18} />
               Order on WhatsApp
             </a>
           </div>
           <div className="mt-9 flex max-w-3xl flex-wrap gap-2">
             {trust.map((item) => (
-              <span key={item} className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-3.5 py-2 text-sm text-white/80 backdrop-blur-xl">
+              <span
+                key={item}
+                className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-3.5 py-2 text-sm text-white/80 backdrop-blur-xl"
+              >
                 <Check size={15} className="text-champagne" />
                 {item}
               </span>
@@ -589,7 +608,11 @@ function FeaturedCategories({ onNavigate }) {
               className="group overflow-hidden rounded-[2rem] border border-line bg-white text-left shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-premium"
             >
               <div className="aspect-[4/3] overflow-hidden bg-chalk">
-                <img src={category.image} alt={`${category.title} perfume collection`} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                <img
+                  src={category.image}
+                  alt={`${category.title} perfume collection`}
+                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                />
               </div>
               <div className="p-5">
                 <div className="flex items-center justify-between gap-3">
@@ -635,6 +658,8 @@ function BestSellers({ onOpenProduct, onQuickView, onAddCart, onBuyNow, onToggle
 }
 
 function ProductCard({ product, onOpenProduct, onQuickView, onAddCart, onBuyNow, onToggleWishlist, isWishlisted }) {
+  const wished = isWishlisted(product.id);
+
   return (
     <article className="product-card rounded-[1.75rem] border border-line bg-white p-3 transition duration-300 hover:-translate-y-1">
       <div className="relative overflow-hidden rounded-[1.35rem] bg-chalk">
@@ -642,12 +667,12 @@ function ProductCard({ product, onOpenProduct, onQuickView, onAddCart, onBuyNow,
           type="button"
           onClick={() => onToggleWishlist(product)}
           className={`absolute right-3 top-3 z-10 icon-button border border-white/70 shadow-soft hover:bg-white ${
-            isWishlisted(product.id) ? "bg-champagne text-black" : "bg-white/80 text-ink"
+            wished ? "bg-champagne text-black" : "bg-white/80 text-ink"
           }`}
-          aria-label={`${isWishlisted(product.id) ? "Remove" : "Add"} ${product.name} ${isWishlisted(product.id) ? "from" : "to"} wishlist`}
-          title={isWishlisted(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+          aria-label={`${wished ? "Remove" : "Add"} ${product.name} ${wished ? "from" : "to"} wishlist`}
+          title={wished ? "Remove from wishlist" : "Add to wishlist"}
         >
-          <Heart size={18} className={isWishlisted(product.id) ? "fill-current" : ""} />
+          <Heart size={18} className={wished ? "fill-current" : ""} />
         </button>
         <button type="button" onClick={() => onOpenProduct(product)} className="block w-full">
           <img src={product.image} alt={`${product.name} perfume bottle`} className="aspect-[4/4.6] h-full w-full object-cover" />
@@ -676,12 +701,20 @@ function ProductCard({ product, onOpenProduct, onQuickView, onAddCart, onBuyNow,
             <p className="text-xs uppercase tracking-[0.18em] text-smoke">From</p>
             <p className="text-xl font-semibold">BDT {product.price.toLocaleString()}</p>
           </div>
-          <button type="button" onClick={() => onQuickView(product)} className="rounded-full border border-line px-4 py-2 text-sm font-medium transition hover:border-champagne hover:text-champagne">
+          <button
+            type="button"
+            onClick={() => onQuickView(product)}
+            className="rounded-full border border-line px-4 py-2 text-sm font-medium transition hover:border-champagne hover:text-champagne"
+          >
             Quick view
           </button>
         </div>
         <div className="mt-4 grid grid-cols-2 gap-2">
-          <button type="button" onClick={() => onAddCart(product, product.sizes[0], 1)} className="premium-button min-h-12 bg-ink px-3 py-2 text-sm text-white hover:bg-black">
+          <button
+            type="button"
+            onClick={() => onAddCart(product, product.sizes[0], 1)}
+            className="premium-button min-h-12 bg-ink px-3 py-2 text-sm text-white hover:bg-black"
+          >
             <ShoppingBag size={16} />
             Add
           </button>
@@ -693,7 +726,6 @@ function ProductCard({ product, onOpenProduct, onQuickView, onAddCart, onBuyNow,
     </article>
   );
 }
-
 function SizePills({ sizes }) {
   return (
     <div className="mt-4 flex gap-2">
@@ -717,7 +749,12 @@ function WhyChoose() {
   return (
     <section className="section-pad bg-obsidian text-white">
       <div className="luxury-container">
-        <SectionHeader dark eyebrow="Why LA ESPERANZA" title="Quietly premium from first click to final drydown." copy="A clean buying experience, honest scent information, and secure checkout options designed for trust." />
+        <SectionHeader
+          dark
+          eyebrow="Why LA ESPERANZA"
+          title="Quietly premium from first click to final drydown."
+          copy="A clean buying experience, honest scent information, and secure checkout options designed for trust."
+        />
         <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {items.map(({ icon: Icon, title, copy }) => (
             <div key={title} className="rounded-[1.75rem] border border-white/10 bg-white/[0.04] p-6">
@@ -762,14 +799,22 @@ function EditorialShowcase({ onNavigate, onOpenProduct }) {
       <div className="luxury-container grid items-center gap-10 lg:grid-cols-[0.98fr_1.02fr]">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-champagne">Product spotlight</p>
-          <h2 className="mt-4 max-w-xl text-[clamp(2rem,4vw,4.2rem)] font-semibold leading-[1.02]">A scent wardrobe with cinematic restraint.</h2>
-          <p className="mt-5 max-w-xl text-lg leading-8 text-smoke">Move from fresh office signatures to rich evening amber without losing the clean, modern confidence of the brand.</p>
+          <h2 className="mt-4 max-w-xl text-[clamp(2rem,4vw,4.2rem)] font-semibold leading-[1.02]">
+            A scent wardrobe with cinematic restraint.
+          </h2>
+          <p className="mt-5 max-w-xl text-lg leading-8 text-smoke">
+            Move from fresh office signatures to rich evening amber without losing the clean, modern confidence of the brand.
+          </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <button type="button" onClick={() => onOpenProduct(products[2])} className="premium-button bg-ink text-white hover:bg-black">
               View Amber Silk
               <ArrowRight size={18} />
             </button>
-            <button type="button" onClick={() => onNavigate("shop")} className="premium-button border border-line bg-white text-ink hover:border-champagne">
+            <button
+              type="button"
+              onClick={() => onNavigate("shop")}
+              className="premium-button border border-line bg-white text-ink hover:border-champagne"
+            >
               Compare scents
             </button>
           </div>
@@ -806,7 +851,7 @@ function Testimonials() {
                   <Star key={index} size={16} className="fill-champagne" />
                 ))}
               </div>
-              <blockquote className="text-lg leading-8">&quot;{quote}&quot;</blockquote>
+              <blockquote className="text-lg leading-8">"{quote}"</blockquote>
               <figcaption className="mt-6 text-sm font-medium text-smoke">
                 {name} - {city}
               </figcaption>
@@ -859,7 +904,7 @@ function WhatsAppSection() {
           <p className="mt-3 max-w-2xl text-white/64">Share your scent, size, phone number, and delivery address. Facebook ordering is supported too.</p>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row">
-          <a href="https://wa.me/" className="premium-button bg-champagne text-black hover:bg-white">
+          <a href={createWhatsAppLink()} target="_blank" rel="noreferrer" className="premium-button bg-champagne text-black hover:bg-white">
             <MessageCircle size={18} />
             WhatsApp
           </a>
@@ -883,7 +928,11 @@ function Newsletter() {
             <h2 className="mt-3 text-3xl font-semibold">New drops, restocks, and private offers.</h2>
           </div>
           <form className="flex flex-col gap-3 sm:flex-row">
-            <input type="email" placeholder="Email address" className="min-h-14 flex-1 rounded-full border border-line bg-chalk px-5 outline-none transition focus:border-champagne" />
+            <input
+              type="email"
+              placeholder="Email address"
+              className="min-h-14 flex-1 rounded-full border border-line bg-chalk px-5 outline-none transition focus:border-champagne"
+            />
             <button className="premium-button bg-ink text-white hover:bg-black">Join list</button>
           </form>
         </div>
@@ -898,38 +947,32 @@ function ShopPage({ onOpenProduct, onQuickView, onAddCart, onBuyNow, onToggleWis
   const [sort, setSort] = useState("Best sellers");
 
   const filtered = useMemo(() => {
-    let result = products.filter((product) => {
+    return products.filter((product) => {
       const matchesGender = gender === "All" || product.gender === gender;
-      const searchableText = `${product.name} ${product.inspired} ${product.notes.top} ${product.notes.middle} ${product.notes.base}`.toLowerCase();
-      const matchesQuery = searchableText.includes(query.toLowerCase());
+      const matchesQuery = `${product.name} ${product.inspired} ${product.notes.top}`.toLowerCase().includes(query.toLowerCase());
       return matchesGender && matchesQuery;
     });
-
-    if (sort === "Price") {
-      result = [...result].sort((a, b) => a.price - b.price);
-    }
-
-    if (sort === "Popularity" || sort === "Best sellers") {
-      result = [...result].sort((a, b) => b.reviews - a.reviews);
-    }
-
-    if (sort === "Newest") {
-      result = [...result].reverse();
-    }
-
-    return result;
-  }, [gender, query, sort]);
+  }, [gender, query]);
 
   return (
     <main className="pt-32">
       <section className="section-pad bg-porcelain pt-10">
         <div className="luxury-container">
-          <SectionHeader eyebrow="Shop" title="Find the right inspired scent profile." copy="Search, filter, compare, wishlist, and quick view without slowing down the order flow." />
+          <SectionHeader
+            eyebrow="Shop"
+            title="Find the right inspired scent profile."
+            copy="Search, filter, compare, wishlist, and quick view without slowing down the order flow."
+          />
           <div className="mt-8 rounded-[2rem] border border-line bg-white p-4 shadow-soft">
             <div className="grid gap-3 lg:grid-cols-[1fr_auto]">
               <label className="flex min-h-14 items-center gap-3 rounded-full border border-line bg-chalk px-5">
                 <Search size={19} className="text-smoke" />
-                <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search by perfume, notes, or inspired profile" className="w-full bg-transparent outline-none" />
+                <input
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Search by perfume, notes, or inspired profile"
+                  className="w-full bg-transparent outline-none"
+                />
               </label>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:flex">
                 <Select label="Gender" value={gender} onChange={setGender} options={["All", "Men", "Women", "Unisex"]} />
@@ -973,15 +1016,15 @@ function ShopPage({ onOpenProduct, onQuickView, onAddCart, onBuyNow, onToggleWis
               <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
                 {filtered.map((product) => (
                   <ProductCard
-              key={product.id}
-              product={product}
-              onOpenProduct={onOpenProduct}
-              onQuickView={onQuickView}
-              onAddCart={onAddCart}
-              onBuyNow={onBuyNow}
-              onToggleWishlist={onToggleWishlist}
-              isWishlisted={isWishlisted}
-            />
+                    key={product.id}
+                    product={product}
+                    onOpenProduct={onOpenProduct}
+                    onQuickView={onQuickView}
+                    onAddCart={onAddCart}
+                    onBuyNow={onBuyNow}
+                    onToggleWishlist={onToggleWishlist}
+                    isWishlisted={isWishlisted}
+                  />
                 ))}
               </div>
               <ComparisonTable />
@@ -1045,6 +1088,7 @@ function ProductDetail({ product, onOpenProduct, onQuickView, onAddCart, onBuyNo
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState(product.sizes[1]);
   const related = products.filter((item) => item.id !== product.id).slice(0, 3);
+  const wished = isWishlisted(product.id);
 
   useEffect(() => {
     setQuantity(1);
@@ -1070,7 +1114,18 @@ function ProductDetail({ product, onOpenProduct, onQuickView, onAddCart, onBuyNo
 
           <div className="lg:sticky lg:top-32 lg:self-start">
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-champagne">Product detail</p>
-            <h1 className="mt-4 text-[clamp(2.2rem,5vw,4.4rem)] font-semibold leading-tight">{product.name}</h1>
+            <div className="mt-4 flex items-start justify-between gap-4">
+              <h1 className="text-[clamp(2.2rem,5vw,4.4rem)] font-semibold leading-tight">{product.name}</h1>
+              <button
+                type="button"
+                onClick={() => onToggleWishlist(product)}
+                className={`icon-button mt-2 shrink-0 border border-line ${wished ? "bg-champagne text-black" : "bg-white text-ink"}`}
+                aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
+                title={wished ? "Remove from wishlist" : "Add to wishlist"}
+              >
+                <Heart size={20} className={wished ? "fill-current" : ""} />
+              </button>
+            </div>
             <p className="mt-3 text-lg text-smoke">Inspired by: {product.inspired}</p>
             <p className="mt-5 rounded-[1.25rem] border border-line bg-white p-4 text-sm leading-6 text-smoke">{disclaimer}</p>
 
@@ -1088,7 +1143,12 @@ function ProductDetail({ product, onOpenProduct, onQuickView, onAddCart, onBuyNo
               <p className="font-semibold">Occasion</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {["Day", "Night", "Date", "Office"].map((occasion) => (
-                  <span key={occasion} className={`rounded-full border px-4 py-2 text-sm font-medium ${product.occasion.includes(occasion) ? "border-champagne bg-champagne/12 text-ink" : "border-line text-smoke"}`}>
+                  <span
+                    key={occasion}
+                    className={`rounded-full border px-4 py-2 text-sm font-medium ${
+                      product.occasion.includes(occasion) ? "border-champagne bg-champagne/12 text-ink" : "border-line text-smoke"
+                    }`}
+                  >
                     {occasion}
                   </span>
                 ))}
@@ -1100,7 +1160,14 @@ function ProductDetail({ product, onOpenProduct, onQuickView, onAddCart, onBuyNo
                 <p className="font-semibold">Size</p>
                 <div className="mt-3 grid grid-cols-3 gap-2">
                   {product.sizes.map((item) => (
-                    <button key={item} type="button" onClick={() => setSize(item)} className={`rounded-full border px-4 py-3 text-sm font-semibold ${size === item ? "border-ink bg-ink text-white" : "border-line bg-white text-ink"}`}>
+                    <button
+                      key={item}
+                      type="button"
+                      onClick={() => setSize(item)}
+                      className={`rounded-full border px-4 py-3 text-sm font-semibold ${
+                        size === item ? "border-ink bg-ink text-white" : "border-line bg-white text-ink"
+                      }`}
+                    >
                       {item}
                     </button>
                   ))}
@@ -1109,11 +1176,11 @@ function ProductDetail({ product, onOpenProduct, onQuickView, onAddCart, onBuyNo
               <div>
                 <p className="font-semibold">Quantity</p>
                 <div className="mt-3 flex h-12 w-40 items-center justify-between rounded-full border border-line bg-white px-2">
-                  <button type="button" className="icon-button h-9 w-9 border border-line text-ink" onClick={() => setQuantity(Math.max(1, quantity - 1))}>
+                  <button className="icon-button h-9 w-9 border border-line text-ink" onClick={() => setQuantity(Math.max(1, quantity - 1))}>
                     <Minus size={16} />
                   </button>
                   <span className="font-semibold">{quantity}</span>
-                  <button type="button" className="icon-button h-9 w-9 border border-line text-ink" onClick={() => setQuantity(quantity + 1)}>
+                  <button className="icon-button h-9 w-9 border border-line text-ink" onClick={() => setQuantity(quantity + 1)}>
                     <Plus size={16} />
                   </button>
                 </div>
@@ -1125,9 +1192,7 @@ function ProductDetail({ product, onOpenProduct, onQuickView, onAddCart, onBuyNo
                 <ShoppingBag size={18} />
                 Add to Cart
               </button>
-              <button type="button" onClick={() => onBuyNow(product, size, quantity)} className="premium-button flex-1 bg-champagne text-black hover:bg-white">
-                Buy Now
-              </button>
+              <button type="button" onClick={() => onBuyNow(product, size, quantity)} className="premium-button flex-1 bg-champagne text-black hover:bg-white">Buy Now</button>
             </div>
           </div>
         </div>
@@ -1141,16 +1206,7 @@ function ProductDetail({ product, onOpenProduct, onQuickView, onAddCart, onBuyNo
           <SectionHeader eyebrow="Related products" title="Complete the fragrance wardrobe." />
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             {related.map((item) => (
-              <ProductCard
-                key={item.id}
-                product={item}
-                onOpenProduct={onOpenProduct}
-                onQuickView={onQuickView}
-                onAddCart={onAddCart}
-                onBuyNow={onBuyNow}
-                onToggleWishlist={onToggleWishlist}
-                isWishlisted={isWishlisted}
-              />
+              <ProductCard key={item.id} product={item} onOpenProduct={onOpenProduct} onQuickView={onQuickView} onAddCart={onAddCart} onBuyNow={onBuyNow} onToggleWishlist={onToggleWishlist} isWishlisted={isWishlisted} />
             ))}
           </div>
         </div>
@@ -1187,7 +1243,7 @@ function ReviewsPanel() {
           4.9
         </span>
       </div>
-      <p className="mt-5 leading-7 text-smoke">&quot;Smooth opening, strong performance, and the bottle looks beautiful on my dresser.&quot;</p>
+      <p className="mt-5 leading-7 text-smoke">"Smooth opening, strong performance, and the bottle looks beautiful on my dresser."</p>
       <p className="mt-4 text-sm font-medium text-smoke">Verified customer - Dhaka</p>
     </section>
   );
@@ -1211,6 +1267,7 @@ function RecentlyViewed() {
     </section>
   );
 }
+
 
 function WishlistPage({ wishlistItems, onOpenProduct, onRemoveWishlist, onAddCart, onNavigate }) {
   const wishlistProducts = wishlistItems
@@ -1282,15 +1339,112 @@ function CartCheckout({ cartItems, onUpdateQuantity, onRemoveItem, onNavigate })
   const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   const total = subtotal + deliveryFee;
 
-  const handlePlaceOrder = (event) => {
-    event.preventDefault();
+  const [customer, setCustomer] = useState({
+    fullName: "",
+    phone: "",
+    email: "",
+    city: "",
+    address: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [orderSuccess, setOrderSuccess] = useState(false);
+
+  const updateCustomerField = (field, value) => {
+    setCustomer((prevCustomer) => ({ ...prevCustomer, [field]: value }));
+    setErrors((prevErrors) => ({ ...prevErrors, [field]: "" }));
+  };
+
+  const validateCheckout = () => {
+    const nextErrors = {};
+    const bdPhonePattern = new RegExp("^(?:\\+8801|8801|01)[3-9]\\d{8}$");
+    const emailPattern = new RegExp("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
 
     if (cartItems.length === 0) {
-      alert("Your cart is empty. Please add at least one product before checkout.");
-      return;
+      nextErrors.cart = "Your cart is empty. Please add at least one product before checkout.";
     }
 
-    alert("Order placement UI is working. Next step: connect this form to Supabase/backend.");
+    if (!customer.fullName.trim()) {
+      nextErrors.fullName = "Full name is required.";
+    } else if (customer.fullName.trim().length < 3) {
+      nextErrors.fullName = "Full name must be at least 3 characters.";
+    }
+
+    if (!customer.phone.trim()) {
+      nextErrors.phone = "Phone number is required.";
+    } else if (!bdPhonePattern.test(customer.phone.trim())) {
+      nextErrors.phone = "Enter a valid Bangladesh number, for example 017XXXXXXXX or +88017XXXXXXXX.";
+    }
+
+    if (customer.email.trim() && !emailPattern.test(customer.email.trim())) {
+      nextErrors.email = "Enter a valid email address or leave it empty.";
+    }
+
+    if (!customer.city.trim()) {
+      nextErrors.city = "City is required.";
+    }
+
+    if (!customer.address.trim()) {
+      nextErrors.address = "Delivery address is required.";
+    } else if (customer.address.trim().length < 10) {
+      nextErrors.address = "Please write a more complete delivery address.";
+    }
+
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
+  const createOrderMessage = () => {
+    const productLines = cartItems
+      .map((item, index) => {
+        const itemTotal = (item.price * item.quantity).toLocaleString();
+        return `${index + 1}. ${item.name} (${item.size}) x ${item.quantity} - BDT ${itemTotal}`;
+      })
+      .join("\n");
+
+    const lines = [
+      "Hello LA ESPERANZA,",
+      "",
+      "I want to place an order.",
+      "",
+      "Products:",
+      productLines,
+      "",
+      `Subtotal: BDT ${subtotal.toLocaleString()}`,
+      `Delivery: BDT ${deliveryFee.toLocaleString()}`,
+      `Total: BDT ${total.toLocaleString()}`,
+      "",
+      "Customer Details:",
+      `Name: ${customer.fullName}`,
+      `Phone: ${customer.phone}`,
+      `Email: ${customer.email || "Not provided"}`,
+      `City: ${customer.city}`,
+      `Address: ${customer.address}`,
+      "",
+      "Payment Method: Cash on Delivery",
+      "",
+      "Thank you.",
+    ];
+
+    return lines.join("\n");
+  };
+
+  const handlePlaceOrder = (event) => {
+    event.preventDefault();
+    setOrderSuccess(false);
+
+    if (!validateCheckout()) return;
+
+    setOrderSuccess(true);
+  };
+
+  const handleWhatsAppOrder = () => {
+    setOrderSuccess(false);
+
+    if (!validateCheckout()) return;
+
+    const message = createOrderMessage();
+    window.location.href = createWhatsAppLink(message);
+    setOrderSuccess(true);
   };
 
   return (
@@ -1301,37 +1455,105 @@ function CartCheckout({ cartItems, onUpdateQuantity, onRemoveItem, onNavigate })
           <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_390px]">
             <form onSubmit={handlePlaceOrder} className="rounded-[2rem] border border-line bg-white p-5 shadow-soft md:p-7">
               <div className="grid gap-4 sm:grid-cols-2">
-                {[
-                  ["Full name", "text"],
-                  ["Phone number", "tel"],
-                  ["Email address", "email"],
-                  ["City", "text"],
-                ].map(([label, type]) => (
-                  <label key={label} className="grid gap-2 text-sm font-medium">
-                    {label}
-                    <input type={type} required={label !== "Email address"} className="min-h-13 rounded-2xl border border-line bg-chalk px-4 outline-none focus:border-champagne" />
-                  </label>
-                ))}
+                <label className="grid gap-2 text-sm font-medium">
+                  Full name
+                  <input
+                    type="text"
+                    value={customer.fullName}
+                    onChange={(event) => updateCustomerField("fullName", event.target.value)}
+                    className={`min-h-13 rounded-2xl border bg-chalk px-4 outline-none focus:border-champagne ${errors.fullName ? "border-red-400" : "border-line"}`}
+                  />
+                  {errors.fullName && <span className="text-xs font-medium text-red-500">{errors.fullName}</span>}
+                </label>
+
+                <label className="grid gap-2 text-sm font-medium">
+                  Phone number
+                  <input
+                    type="tel"
+                    value={customer.phone}
+                    onChange={(event) => updateCustomerField("phone", event.target.value)}
+                    placeholder="017XXXXXXXX"
+                    className={`min-h-13 rounded-2xl border bg-chalk px-4 outline-none focus:border-champagne ${errors.phone ? "border-red-400" : "border-line"}`}
+                  />
+                  {errors.phone && <span className="text-xs font-medium text-red-500">{errors.phone}</span>}
+                </label>
+
+                <label className="grid gap-2 text-sm font-medium">
+                  Email address <span className="text-xs font-normal text-smoke">Optional</span>
+                  <input
+                    type="email"
+                    value={customer.email}
+                    onChange={(event) => updateCustomerField("email", event.target.value)}
+                    className={`min-h-13 rounded-2xl border bg-chalk px-4 outline-none focus:border-champagne ${errors.email ? "border-red-400" : "border-line"}`}
+                  />
+                  {errors.email && <span className="text-xs font-medium text-red-500">{errors.email}</span>}
+                </label>
+
+                <label className="grid gap-2 text-sm font-medium">
+                  City
+                  <input
+                    type="text"
+                    value={customer.city}
+                    onChange={(event) => updateCustomerField("city", event.target.value)}
+                    className={`min-h-13 rounded-2xl border bg-chalk px-4 outline-none focus:border-champagne ${errors.city ? "border-red-400" : "border-line"}`}
+                  />
+                  {errors.city && <span className="text-xs font-medium text-red-500">{errors.city}</span>}
+                </label>
+
                 <label className="grid gap-2 text-sm font-medium sm:col-span-2">
                   Delivery address
-                  <textarea required className="min-h-28 rounded-2xl border border-line bg-chalk px-4 py-3 outline-none focus:border-champagne" />
+                  <textarea
+                    value={customer.address}
+                    onChange={(event) => updateCustomerField("address", event.target.value)}
+                    className={`min-h-28 rounded-2xl border bg-chalk px-4 py-3 outline-none focus:border-champagne ${errors.address ? "border-red-400" : "border-line"}`}
+                  />
+                  {errors.address && <span className="text-xs font-medium text-red-500">{errors.address}</span>}
                 </label>
               </div>
+
+              {errors.cart && (
+                <p className="mt-5 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-600">
+                  {errors.cart}
+                </p>
+              )}
+
+              {orderSuccess && (
+                <div className="mt-5 rounded-2xl border border-champagne bg-champagne/10 p-5">
+                  <div className="flex items-start gap-3">
+                    <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-champagne text-black">
+                      <Check size={18} />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">Order information validated successfully.</h3>
+                      <p className="mt-1 text-sm leading-6 text-smoke">
+                        WhatsApp order message is ready. Next step is saving orders to Supabase/backend.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 <CheckoutOption icon={User} title="Guest checkout" copy="No forced login" active />
                 <CheckoutOption icon={Lock} title="Save details" copy="Create account after order" />
                 <CheckoutOption icon={WalletCards} title="Cash on Delivery" copy="Available now" active />
                 <CheckoutOption icon={CreditCard} title="Digital payments" copy="bKash, Nagad, Rocket, SSLCOMMERZ later" />
               </div>
-              <button type="submit" className="premium-button mt-7 w-full bg-ink text-white hover:bg-black">
-                <Lock size={18} />
-                Place COD Order
-              </button>
+
+              <div className="mt-7 grid gap-3 sm:grid-cols-2">
+                <button type="submit" className="premium-button w-full bg-ink text-white hover:bg-black">
+                  <Lock size={18} />
+                  Validate COD Order
+                </button>
+                <button type="button" onClick={handleWhatsAppOrder} className="premium-button w-full bg-champagne text-black hover:bg-white">
+                  <MessageCircle size={18} />
+                  Order on WhatsApp
+                </button>
+              </div>
             </form>
 
             <aside className="rounded-[2rem] border border-line bg-white p-6 shadow-premium lg:sticky lg:top-32 lg:self-start">
               <h3 className="text-xl font-semibold">Order summary</h3>
-
               {cartItems.length === 0 ? (
                 <div className="mt-5 rounded-2xl bg-chalk p-5 text-sm leading-6 text-smoke">
                   Your cart is empty.
@@ -1371,7 +1593,6 @@ function CartCheckout({ cartItems, onUpdateQuantity, onRemoveItem, onNavigate })
                   ))}
                 </div>
               )}
-
               <div className="mt-6 grid gap-3 border-t border-line pt-6 text-sm">
                 <SummaryRow label="Subtotal" value={`BDT ${subtotal.toLocaleString()}`} />
                 <SummaryRow label="Delivery inside Bangladesh" value={`BDT ${deliveryFee.toLocaleString()}`} />
@@ -1386,7 +1607,6 @@ function CartCheckout({ cartItems, onUpdateQuantity, onRemoveItem, onNavigate })
     </main>
   );
 }
-
 function CheckoutOption({ icon: Icon, title, copy, active = false }) {
   return (
     <div className={`rounded-[1.5rem] border p-4 ${active ? "border-champagne bg-champagne/10" : "border-line bg-chalk"}`}>
@@ -1510,6 +1730,8 @@ function AdminDashboard() {
 }
 
 function QuickViewModal({ product, onClose, onOpenProduct, onAddCart, onBuyNow, onToggleWishlist, isWishlisted }) {
+  const wished = isWishlisted(product.id);
+
   return (
     <div className="fixed inset-0 z-[80] grid place-items-center bg-black/58 p-4 backdrop-blur-md">
       <div className="grid max-h-[92vh] w-full max-w-4xl overflow-hidden rounded-[2rem] bg-white shadow-glass md:grid-cols-[0.9fr_1.1fr]">
@@ -1524,13 +1746,12 @@ function QuickViewModal({ product, onClose, onOpenProduct, onAddCart, onBuyNow, 
             </div>
             <div className="flex gap-2">
               <button
-                type="button"
+                className={`icon-button border border-line ${wished ? "bg-champagne text-black" : "text-ink"}`}
                 onClick={() => onToggleWishlist(product)}
-                className={`icon-button border border-line ${isWishlisted(product.id) ? "bg-champagne text-black" : "text-ink"}`}
-                aria-label={isWishlisted(product.id) ? "Remove from wishlist" : "Add to wishlist"}
-                title={isWishlisted(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+                aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
+                title={wished ? "Remove from wishlist" : "Add to wishlist"}
               >
-                <Heart size={18} className={isWishlisted(product.id) ? "fill-current" : ""} />
+                <Heart size={18} className={wished ? "fill-current" : ""} />
               </button>
               <button className="icon-button border border-line text-ink" onClick={onClose} aria-label="Close quick view">
                 <X size={18} />
@@ -1626,7 +1847,6 @@ function SearchModal({ query, setQuery, products, onClose, onOpenProduct }) {
     </div>
   );
 }
-
 function SectionHeader({ eyebrow, title, copy, action, onAction, dark = false }) {
   return (
     <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
